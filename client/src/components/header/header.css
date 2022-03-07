@@ -1,0 +1,27 @@
+header{
+    width: 100%;
+    min-width: 90px;
+    background: cornflowerblue;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    padding: 40 20px;
+
+}
+header a{
+    color: cyan;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    
+}
+header ul li {
+display: inline-flex;
+padding: 20px 20px;
+opacity: 1;
+
+
+}
+header ul li:hover{
+    opacity: 1;
+}

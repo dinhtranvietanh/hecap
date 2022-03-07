@@ -115,7 +115,61 @@ const userCtrl = {
         } catch (error) {
             return res.status(500).json({ msg: err.message })
         }
+    },
+    getUserInfo: async (req, res) => {
+        try {
+            const user = await Users.findById(req.user.id).select('-password')
+            res.json(user)
+        } catch (error) {
+            return res.status(500).json({ msg: err.message })
+
+        }
+    },
+    getAllUsersInfo: async (req, res) => {
+        try {
+
+            const users = await Users.find().select('-password')
+            res.json(users)
+        } catch (error) {
+            return res.status(500).json({ msg: err.message })
+        }
+    },
+    logout: async (req, res) => {
+        try {
+            res.clearCookie('refreshtoken', { path: '/user/refresh_token' })
+            return res.json({ msg: "bye" })
+        } catch (error) {
+            return res.status(500).json({ msg: err.message })
+        }
+    },
+    updateUser: async (req, res) => {
+        try {
+            const { name, avatar } = req.body
+            await Users.findOneAndUpdate({ _id: req.user.id }, { name, avatar })
+            res.json({ msg: " Updated " })
+        } catch (error) {
+            return res.status(500).json({ msg: err.message })
+        }
+    },
+    updateRole: async (req, res) => {
+        try {
+            const { role } = req.body
+            await Users.findOneAndUpdate({ _id: req.params.id }, { role })
+            res.json({ msg: " Updated " })
+        } catch (error) {
+            return res.status(500).json({ msg: err.message })
+        }
+    },
+    deleteUser: async (req, res) => {
+        try {
+
+            await Users.findByIdAndDelete(req.params.id)
+            res.json({ msg: " Deleted " })
+        } catch (error) {
+            return res.status(500).json({ msg: err.message })
+        }
     }
+
 }
 
 
@@ -128,7 +182,7 @@ const createActivationToken = (payload) => {
     return jwt.sign(payload, process.env.ACTIVATION_TOKEN_SECRET, { expiresIn: '5m' })
 }
 const createAccessToken = (payload) => {
-    return jwt.sign(payload, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '15' })
+    return jwt.sign(payload, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '15m' })
 }
 const createrRefreshToken = (payload) => {
     return jwt.sign(payload, process.env.REFRESH_TOKEN_SECRET, { expiresIn: '7d' })
